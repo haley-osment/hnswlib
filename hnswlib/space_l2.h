@@ -22,9 +22,9 @@ L2Sqr(const void *pVect1v, const void *pVect2v, const void *qty_ptr) {
         INTRINSIC_VAR_O = vmlaq_f32(INTRINSIC_VAR_O, INTRINSIC_VAR_3, INTRINSIC_VAR_3);
         
         pVect1 += 4;
-        pVect1 += 4;
+        pVect2 += 4;
     }
-    for (size_t i = 0; i < qty; i++) {
+    for (; i < qty; i++) {
         float t = *pVect1 - *pVect2;
         pVect1++;
         pVect2++;
