@@ -1,5 +1,6 @@
 #pragma once
 #include "hnswlib.h"
+#include <arm_neon.h>
 
 namespace hnswlib {
 
@@ -9,13 +10,27 @@ L2Sqr(const void *pVect1v, const void *pVect2v, const void *qty_ptr) {
     float *pVect2 = (float *) pVect2v;
     size_t qty = *((size_t *) qty_ptr);
 
+    float32x4_t INTRINSIC_VAR_O = vdupq_n_f32(0.0f);
+    size_t i = 0;
     float res = 0;
+    for (; i < qty - 4; i+=4) {
+        float32x4_t INTRINSIC_VAR_1 = vld1q_f32(pVect1);
+        float32x4_t INTRINSIC_VAR_2 = vld1q_f32(pVect2);
+
+        float32x4_t INTRINSIC_VAR_3 = vsubq_f32(INTRINSIC_VAR_1, INTRINSIC_VAR_2);
+        
+        INTRINSIC_VAR_O = vmlaq_f32(INTRINSIC_VAR_O, INTRINSIC_VAR_3, INTRINSIC_VAR_3);
+        
+        pVect1 += 4;
+        pVect1 += 4;
+    }
     for (size_t i = 0; i < qty; i++) {
         float t = *pVect1 - *pVect2;
         pVect1++;
         pVect2++;
         res += t * t;
     }
+    res += vaddvq_f32(INTRINSIC_VAR_O);
     return (res);
 }
 
