@@ -1,5 +1,6 @@
 #pragma once
 #include "hnswlib.h"
+#include <arm_neon.h>
 
 namespace hnswlib {
 
@@ -7,9 +8,17 @@ static float
 InnerProduct(const void *pVect1, const void *pVect2, const void *qty_ptr) {
     size_t qty = *((size_t *) qty_ptr);
     float res = 0;
+    float32x4_t INTRINSIC_VAR_O = vdupq_n_f32(0.0f);
+    unsigned i = 0;
+    for (; i < qty - 4; i+=4) {
+        float32x4_t INTRINSIC_VAR_1 = vld1q_f32((float*)pVect1 + i);
+        float32x4_t INTRINSIC_VAR_2 = vld1q_f32((float*)pVect2 + i);
+        INTRINSIC_VAR_O = vmlaq_f32(INTRINSIC_VAR_O, INTRINSIC_VAR_1, INTRINSIC_VAR_2);
+    }
     for (unsigned i = 0; i < qty; i++) {
         res += ((float *) pVect1)[i] * ((float *) pVect2)[i];
     }
+    res += vaddvq_f32(INTRINSIC_VAR_O);
     return res;
 }
 
