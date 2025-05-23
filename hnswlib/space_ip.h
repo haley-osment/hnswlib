@@ -15,7 +15,7 @@ InnerProduct(const void *pVect1, const void *pVect2, const void *qty_ptr) {
         float32x4_t INTRINSIC_VAR_2 = vld1q_f32((float*)pVect2 + i);
         INTRINSIC_VAR_O = vmlaq_f32(INTRINSIC_VAR_O, INTRINSIC_VAR_1, INTRINSIC_VAR_2);
     }
-    for (unsigned i = 0; i < qty; i++) {
+    for (; i < qty; i++) {
         res += ((float *) pVect1)[i] * ((float *) pVect2)[i];
     }
     res += vaddvq_f32(INTRINSIC_VAR_O);
