@@ -14,8 +14,8 @@ L2Sqr(const void *pVect1v, const void *pVect2v, const void *qty_ptr) {
     size_t i = 0;
     float res = 0;
     for (; i < qty - 4; i+=4) {
-        float32x4_t INTRINSIC_VAR_1 = vld1q_f32(pVect1);
-        float32x4_t INTRINSIC_VAR_2 = vld1q_f32(pVect2);
+        float32x4_t INTRINSIC_VAR_1 = vld1q_f32((float*)pVect1);
+        float32x4_t INTRINSIC_VAR_2 = vld1q_f32((float*)pVect2);
 
         float32x4_t INTRINSIC_VAR_3 = vsubq_f32(INTRINSIC_VAR_1, INTRINSIC_VAR_2);
         
